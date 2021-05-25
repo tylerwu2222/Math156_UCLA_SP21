@@ -17,6 +17,9 @@ from sklearn.metrics import confusion_matrix
 ############### Building The Network ################
 #####################################################
 
+def hi():
+    print('hi')
+
 class CNN(object):
     """
     Input data type: training_data = [pattern1, pattern2, ..., pattern n]
@@ -459,13 +462,17 @@ class CNN(object):
         [f1, f2, w3, w4, b1, b2, b3, b4] = self.params
 
         list_probs = []
-
+        conv1s = []
+        conv2s = []
+        
         for i in trange(len(image_list)):
             image = image_list[i]
             conv1 = self.convolution(image, f1, b1, conv_s) # convolution operation
+            conv1s.append(conv1)
             conv1[conv1<=0] = 0 #relu activation
 
             conv2 = self.convolution(conv1, f2, b2, conv_s) # second convolution operation
+            conv2s.append(conv2)
             conv2[conv2<=0] = 0 # pass through ReLU non-linearity
 
             pooled = self.maxpool(conv2, pool_f, pool_s) # maxpooling operation
@@ -478,8 +485,9 @@ class CNN(object):
             out = w4.dot(z) + b4 # second dense layer
             probs = softmax(out) # predict class probabilities with the softmax activation function
             list_probs.append(probs)
-
-        return list_probs
+#             print('conv1',conv1)
+#             print('conv2',conv2)
+        return list_probs, conv1s, conv2s
 
 #####################################################
 ################## Utility Methods ##################
